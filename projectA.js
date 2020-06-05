@@ -19,9 +19,11 @@ c.onresize=function(e){ reOffset(); }
 // save relevant information about shapes drawn on the canvas
 var shapes=[];
 // define one circle and save it in the shapes[] array
-shapes.push( {x:30, y:30, radius:15, color:'blue'} );
+shapes.push( {x:40, y:40, radius:25, color:'blue'} );
 // define one rectangle and save it in the shapes[] array
-shapes.push( {x:100, y:-1, width:75, height:35, color:'red'} );
+shapes.push( {x:100, y:100, width:100, height:50, color:'red'} );
+// define one triangle and save it in the shapes[] array
+shapes.push( {x:200, y:200, line:100, color:'red'} );
 
 // drag related vars
 var isDragging=false;
@@ -59,6 +61,16 @@ function isMouseInShape(mx,my,shape){
         var rBott=shape.y+shape.height;
         // math test to see if mouse is inside rectangle
         if( mx>rLeft && mx<rRight && my>rTop && my<rBott){
+            return(true);
+        }
+    } else if(shape.line){
+        // this is a rectangle
+        var rLeft=shape.x;
+        var rBott=shape.y+shape.line;
+        var rMouse=mx-my;
+        var rT=shape.x-shape.y;
+        // math test to see if mouse is inside rectangle
+        if( mx>rLeft && my<rBott && rMouse<rT){
             return(true);
         }
     }
@@ -148,6 +160,13 @@ function drawAll(){
             // it's a rectangle
             ctx.fillStyle=shape.color;
             ctx.fillRect(shape.x,shape.y,shape.width,shape.height);
+        } else if(shape.line){
+            // it's a triangle
+            ctx.fillStyle=shape.color;
+            ctx.moveTo(shape.x, shape.y);
+            ctx.lineTo(shape.x, shape.y + shape.line);
+            ctx.lineTo(shape.x + shape.line, shape.y + shape.line);
+            ctx.fill();
         }
     }
 }
