@@ -18,12 +18,11 @@ c.onresize=function(e){ reOffset(); }
 
 // save relevant information about shapes drawn on the canvas
 var shapes=[];
-// define one circle and save it in the shapes[] array
-shapes.push( {x:40, y:40, radius:25, color:'blue'} );
-// define one rectangle and save it in the shapes[] array
-shapes.push( {x:100, y:100, width:100, height:50, color:'red'} );
 // define one triangle and save it in the shapes[] array
-shapes.push( {x:200, y:200, line:100, color:'red'} );
+shapes.push( {x:40, y:200, line:50} );
+shapes.push( {x:110, y:200, line:50} );
+shapes.push( {x:190, y:200, line:50} );
+shapes.push( {x:260, y:200, line:50} );
 
 // drag related vars
 var isDragging=false;
@@ -44,26 +43,7 @@ c.onmouseout=handleMouseOut;
 // given mouse X & Y (mx & my) and shape object
 // return true/false whether mouse is inside the shape
 function isMouseInShape(mx,my,shape){
-    if(shape.radius){
-        // this is a circle
-        var dx=mx-shape.x;
-        var dy=my-shape.y;
-        // math test to see if mouse is inside circle
-        if(dx*dx+dy*dy<shape.radius*shape.radius){
-            // yes, mouse is inside this circle
-            return(true);
-        }
-    }else if(shape.width){
-        // this is a rectangle
-        var rLeft=shape.x;
-        var rRight=shape.x+shape.width;
-        var rTop=shape.y;
-        var rBott=shape.y+shape.height;
-        // math test to see if mouse is inside rectangle
-        if( mx>rLeft && mx<rRight && my>rTop && my<rBott){
-            return(true);
-        }
-    } else if(shape.line){
+    if(shape.line){
         // this is a rectangle
         var rLeft=shape.x;
         var rBott=shape.y+shape.line;
@@ -148,24 +128,16 @@ function handleMouseMove(e){
 // redraw all shapes in their current positions
 function drawAll(){
     ctx.clearRect(0,0,cw,ch);
+    var color = 'red';
     for(var i=0;i<shapes.length;i++){
         var shape=shapes[i];
-        if(shape.radius){
-            // it's a circle
-            ctx.beginPath();
-            ctx.arc(shape.x,shape.y,shape.radius,0,Math.PI*2);
-            ctx.fillStyle=shape.color;
-            ctx.fill();
-        }else if(shape.width){
-            // it's a rectangle
-            ctx.fillStyle=shape.color;
-            ctx.fillRect(shape.x,shape.y,shape.width,shape.height);
-        } else if(shape.line){
+        if(shape.line){
             // it's a triangle
-            ctx.fillStyle=shape.color;
+            ctx.beginPath();
             ctx.moveTo(shape.x, shape.y);
             ctx.lineTo(shape.x, shape.y + shape.line);
             ctx.lineTo(shape.x + shape.line, shape.y + shape.line);
+            ctx.fillStyle=color;
             ctx.fill();
         }
     }
