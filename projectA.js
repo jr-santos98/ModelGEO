@@ -17,5 +17,3 @@ function mouseMove(e) {
 function mouseOut() {
     document.getElementById("coord").innerHTML = "";
 };//End Function
-
-console.log('Ainda não carregou');
