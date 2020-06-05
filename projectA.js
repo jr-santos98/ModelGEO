@@ -7,4 +7,15 @@ function draw() {
   ctx.fill();
 }
 
-draw();
+function mouseMove(e) {
+    var x = e.clientX - 8;
+    var y = e.clientY - 80;
+    var coord = "Mouse: (" + x + "," + y + ")";
+    document.getElementById("coord").innerHTML = coord;
+};//End Function
+
+function mouseOut() {
+    document.getElementById("coord").innerHTML = "";
+};//End Function
+
+console.log('Ainda não carregou');
