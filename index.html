@@ -4,6 +4,7 @@
 
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css"></link>
+    <script src="projectA.js" charset="utf-8"></script>
     <title>Project A</title>
 
   </head>
@@ -11,12 +12,16 @@
 
     <h1>Canvas com o Project A</h1>
 
-    <div class="canvas">
-      <canvas id="myCanvas" width="520" height="380">
+    <div class="canvas" onmousemove="mouseMove(event)" onmouseout="mouseOut()">
+      <canvas id="myCanvas" oncontextmenu="draw()" width="520" height="380">
         Your browser does not support the HTML5 canvas tag.
       </canvas>
-      <script src="projectA.js" charset="utf-8"></script>
+      <script type="text/javascript">
+        draw();
+      </script>
     </div>
+
+    <span id="coord"></span>
 
   </body>
 </html>

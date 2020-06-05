@@ -1,5 +1,10 @@
+body {
+	background-color: #C3D2D7;
+}
+
 .canvas {
   width: 518px;
   height: 378px;
   border:1px solid #d3d3d3;
+  background: GhostWhite;
 }
