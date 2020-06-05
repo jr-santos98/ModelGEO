@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Eventos de Mouse</title>
     <style>
-        div {
-            width: 100px;
-            height: 100px;
-            border: 1px solid red;
-        }
+      #drag_me {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        position: absolute;
+      }
     </style>
+  </head>
+  <body>
+
+    <div id="drag_me">Drag me</div>
+
     <script>
-        function changeColor(param) {
-            var color = "";
-            switch(param){
-                case 1:
-                    color = "red";
-                    break;
-                case 2:
-                    color = "green";
-                    break;
-                case 3:
-                    color = "blue";
-                    break;
-                case 4:
-                    color = "yellow";
-                    break;
-                default:
-                    color = "black";
-                    break;
-            };//End Switch
-            document.getElementById("demo").style.color = color;
-        };//End Function
-        function mouseMove(e) {
-            var x = e.clientX;
-            var y = e.clientY;
-            var coord = "Mouse: (" + x + "," + y + ")";
-            document.getElementById("coord").innerHTML = coord;
-        };//End Function
+      var dragMe = document.getElementById("drag_me"),
+      /* o x inicial do drag*/
+      dragOfX = 0,
+      /* o y inicial do drag */
+      dragOfY = 0;
 
-        function mouseOut() {
-            document.getElementById("coord").innerHTML = "";
-        };//End Function
+      /* ao segurar o elemento */
+      function dragStart(e) {
+        /* define o x inicial do drag */
+        dragOfX = e.pageX - dragMe.offsetLeft;
+        /* define o y inicial do drag */
+        dragOfY = e.pageY - dragMe.offsetTop;
+
+        /* adiciona os eventos */
+        addEventListener("mousemove", dragMove);
+        addEventListener("mouseup", dragEnd);
+      }
+
+      /* ao ser arrastado */
+      function dragMove(e) {
+        /* atualiza a posição do elemento */
+        dragMe.style.left = (e.pageX - dragOfX) + 'px';
+        dragMe.style.top = (e.pageY - dragOfY) + 'px';
+      }
+
+      /* ao terminar o drag */
+      function dragEnd() {
+        /* remove os eventos */
+        removeEventListener("mousemove", dragMove);
+        removeEventListener("mouseup", dragEnd);
+      }
+
+      /* adiciona o evento que começa o drag */
+      dragMe.addEventListener("mousedown", dragStart);
     </script>
-</head>
-<body>
 
-    <p id="demo" onmouseover="changeColor(2)" onmouseout="changeColor(4)">exemplos de eventos de mouse</p>
-
-    <button onclick="changeColor(1)">Click</button>
-    <button ondblclick="changeColor(3)">Duplo click</button>
-    <hr />
-    <div onmousemove="mouseMove(event)" onmouseout="mouseOut()"></div>
-    <hr />
-    <span id="coord"></span>
-</body>
+  </body>
 </html>
