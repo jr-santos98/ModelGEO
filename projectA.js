@@ -19,10 +19,12 @@ c.onresize=function(e){ reOffset(); }
 // save relevant information about shapes drawn on the canvas
 var shapes=[];
 // define one triangle and save it in the shapes[] array
-shapes.push( {x:40, y:200, line:50} );
-shapes.push( {x:110, y:200, line:50} );
-shapes.push( {x:190, y:200, line:50} );
-shapes.push( {x:260, y:200, line:50} );
+shapes.push( {x:170, y:120, line:75, mirror:false} );
+shapes.push( {x:170, y:120, line:75, mirror:true} );
+shapes.push( {x:170, y:195, line:75, mirror:false} );
+shapes.push( {x:170, y:195, line:75, mirror:true} );
+shapes.push( {x:245, y:195, line:75, mirror:false} );
+shapes.push( {x:245, y:195, line:75, mirror:true} );
 
 // drag related vars
 var isDragging=false;
@@ -39,15 +41,25 @@ c.onmousedown=handleMouseDown;
 c.onmousemove=handleMouseMove;
 c.onmouseup=handleMouseUp;
 c.onmouseout=handleMouseOut;
+c.ondblclick=handleMousedblclick;
 
 function reset() {
-  var ix = 40;
-  var iy = 200;
+  var ix = 170;
+  var iy = 120;
   for(var i=0;i<shapes.length;i++){
       var shape=shapes[i];
-      shape.x = ix;
-      shape.y = iy;
-      ix += 50 + 20;
+      if(i == 2) {
+        iy += 75;
+        shape.x = ix;
+        shape.y = iy;
+      } else if (i == 4){
+        ix += 75;
+        shape.x = ix;
+        shape.y = iy;
+      } else {
+        shape.x = ix;
+        shape.y = iy;
+      }
   }
   drawAll();
 }
@@ -55,7 +67,7 @@ function reset() {
 // given mouse X & Y (mx & my) and shape object
 // return true/false whether mouse is inside the shape
 function isMouseInShape(mx,my,shape){
-    if(shape.line){
+    if(shape.mirror == false){
         // this is a rectangle
         var rLeft=shape.x;
         var rBott=shape.y+shape.line;
@@ -63,6 +75,16 @@ function isMouseInShape(mx,my,shape){
         var rT=shape.x-shape.y;
         // math test to see if mouse is inside rectangle
         if( mx>rLeft && my<rBott && rMouse<rT){
+            return(true);
+        }
+    } else if(shape.mirror == true){
+        // this is a rectangle
+        var rRight=shape.x+shape.line;
+        var rTop=shape.y;
+        var rMouse=mx-my;
+        var rT=shape.x-shape.y;
+        // math test to see if mouse is inside rectangle
+        if( mx<rRight && my>rTop && rMouse>rT){
             return(true);
         }
     }
@@ -136,6 +158,28 @@ function handleMouseMove(e){
     startY=mouseY;
 }
 
+function handleMousedblclick(e) {
+  // tell the browser we're handling this event
+  e.preventDefault();
+  e.stopPropagation();
+  // calculate the current mouse position
+  startX=parseInt(e.clientX-offsetX);
+  startY=parseInt(e.clientY-offsetY);
+  // test mouse position against all shapes
+  // post result if mouse is in a shape
+  for(var i=0;i<shapes.length;i++){
+      if(isMouseInShape(startX,startY,shapes[i])){
+          if(shapes[i].mirror==false) {
+            shapes[i].mirror=true;
+          } else if(shapes[i].mirror==true) {
+            shapes[i].mirror=false;
+          }
+          drawAll();
+          return;
+      }
+  }
+}
+
 // clear the canvas and
 // redraw all shapes in their current positions
 function drawAll(){
@@ -143,11 +187,19 @@ function drawAll(){
     var color = 'red';
     for(var i=0;i<shapes.length;i++){
         var shape=shapes[i];
-        if(shape.line){
+        if(shape.mirror==false){
             // it's a triangle
             ctx.beginPath();
             ctx.moveTo(shape.x, shape.y);
             ctx.lineTo(shape.x, shape.y + shape.line);
+            ctx.lineTo(shape.x + shape.line, shape.y + shape.line);
+            ctx.fillStyle=color;
+            ctx.fill();
+        } else if(shape.mirror==true){
+            // it's a triangle
+            ctx.beginPath();
+            ctx.moveTo(shape.x, shape.y);
+            ctx.lineTo(shape.x + shape.line, shape.y);
             ctx.lineTo(shape.x + shape.line, shape.y + shape.line);
             ctx.fillStyle=color;
             ctx.fill();
