@@ -40,6 +40,18 @@ c.onmousemove=handleMouseMove;
 c.onmouseup=handleMouseUp;
 c.onmouseout=handleMouseOut;
 
+function reset() {
+  var ix = 40;
+  var iy = 200;
+  for(var i=0;i<shapes.length;i++){
+      var shape=shapes[i];
+      shape.x = ix;
+      shape.y = iy;
+      ix += 50 + 20;
+  }
+  drawAll();
+}
+
 // given mouse X & Y (mx & my) and shape object
 // return true/false whether mouse is inside the shape
 function isMouseInShape(mx,my,shape){
@@ -142,23 +154,3 @@ function drawAll(){
         }
     }
 }
-
-function draw() {
-  var c = document.getElementById("myCanvas");
-  var ctx = c.getContext("2d");
-  ctx.beginPath();
-  ctx.rect(135, 105, 240, 140);
-  ctx.fillStyle = "blue";
-  ctx.fill();
-}
-
-function mouseMove(e) {
-    var x = e.clientX - 8;
-    var y = e.clientY - 80;
-    var coord = "Mouse: (" + x + "," + y + ")";
-    document.getElementById("coord").innerHTML = coord;
-};//End Function
-
-function mouseOut() {
-    document.getElementById("coord").innerHTML = "";
-};//End Function
