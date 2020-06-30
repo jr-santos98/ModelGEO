@@ -43,6 +43,7 @@ c.onmouseup=handleMouseUp;
 c.onmouseout=handleMouseOut;
 c.ondblclick=handleMousedblclick;
 
+//Retorna a posição inicial
 function reset() {
   var ix = 170;
   var iy = 120;
@@ -64,8 +65,95 @@ function reset() {
   drawAll();
 }
 
-// given mouse X & Y (mx & my) and shape object
-// return true/false whether mouse is inside the shape
+//Verifca se um objeto está a cima
+function haveANeighborUp(i) {
+  var n = selectedShapeIndex;
+  var menorX = shapes[i].x - shapes[n].x > -10;
+  var maiorX = shapes[i].x - shapes[n].x < 10;
+  var menorY = shapes[i].y + 75 - shapes[n].y > -10;
+  var maiorY = shapes[i].y + 75 - shapes[n].y < 10;
+  if ( menorX && maiorX && menorY && maiorY ) return true;
+  else return false;
+}
+
+//Verifca se um objeto está a direita
+function haveANeighborRight(i) {
+  var n = selectedShapeIndex;
+  var menorX = shapes[i].x - 75 - shapes[n].x > -10;
+  var maiorX = shapes[i].x - 75 - shapes[n].x < 10;
+  var menorY = shapes[i].y - shapes[n].y > -10;
+  var maiorY = shapes[i].y - shapes[n].y < 10;
+  if ( menorX && maiorX && menorY && maiorY ) return true;
+  else return false;
+}
+
+//Verifca se um objeto está em baixo
+function haveANeighborDown(i) {
+  var n = selectedShapeIndex;
+  var menorX = shapes[i].x - shapes[n].x > -10;
+  var maiorX = shapes[i].x - shapes[n].x < 10;
+  var menorY = shapes[i].y - 75 - shapes[n].y > -10;
+  var maiorY = shapes[i].y - 75 - shapes[n].y < 10;
+  if ( menorX && maiorX && menorY && maiorY ) return true;
+  else return false;
+}
+
+//Verifca se um objeto está a esquerda
+function haveANeighborLeft(i) {
+  var n = selectedShapeIndex;
+  var menorX = shapes[i].x + 75 - shapes[n].x > -10;
+  var maiorX = shapes[i].x + 75 - shapes[n].x < 10;
+  var menorY = shapes[i].y - shapes[n].y > -10;
+  var maiorY = shapes[i].y - shapes[n].y < 10;
+  if ( menorX && maiorX && menorY && maiorY ) return true;
+  else return false;
+}
+
+//Verifca se um objeto está dentro de outro
+function haveANeighborInside(i) {
+  var n = selectedShapeIndex;
+  var menorX = shapes[i].x - shapes[n].x > -10;
+  var maiorX = shapes[i].x - shapes[n].x < 10;
+  var menorY = shapes[i].y - shapes[n].y > -10;
+  var maiorY = shapes[i].y - shapes[n].y < 10;
+  if ( menorX && maiorX && menorY && maiorY ) return true;
+  else return false;
+}
+
+//Redefini as posições dos objetos quando estiverem proximos
+function rearrange() {
+  for(var i=0;i<shapes.length;i++){
+    if(i==selectedShapeIndex)   continue;
+    if (haveANeighborUp(i)) {
+      shapes[selectedShapeIndex].x = shapes[i].x;
+      shapes[selectedShapeIndex].y = shapes[i].y+75;
+      drawAll();
+      return;
+    } else if (haveANeighborRight(i)) {
+      shapes[selectedShapeIndex].x = shapes[i].x-75;
+      shapes[selectedShapeIndex].y = shapes[i].y;
+      drawAll();
+      return;
+    } else if (haveANeighborDown(i)) {
+      shapes[selectedShapeIndex].x = shapes[i].x;
+      shapes[selectedShapeIndex].y = shapes[i].y-75;
+      drawAll();
+      return;
+    } else if (haveANeighborLeft(i)) {
+      shapes[selectedShapeIndex].x = shapes[i].x+75;
+      shapes[selectedShapeIndex].y = shapes[i].y;
+      drawAll();
+      return;
+    } else if (haveANeighborInside(i)) {
+      shapes[selectedShapeIndex].x = shapes[i].x;
+      shapes[selectedShapeIndex].y = shapes[i].y;
+      drawAll();
+      return;
+    }
+  }
+}
+
+//Verifica se o mouse está dentro de algum objeto
 function isMouseInShape(mx,my,shape){
     if(shape.mirror == false){
         // this is a rectangle
@@ -92,6 +180,7 @@ function isMouseInShape(mx,my,shape){
     return(false);
 }
 
+//Pressionar uma botão do mouse
 function handleMouseDown(e){
     // tell the browser we're handling this event
     e.preventDefault();
@@ -115,6 +204,7 @@ function handleMouseDown(e){
     }
 }
 
+//Soltar o botão do mouse
 function handleMouseUp(e){
     // return if we're not dragging
     if(!isDragging){return;}
@@ -122,9 +212,11 @@ function handleMouseUp(e){
     e.preventDefault();
     e.stopPropagation();
     // the drag is over -- clear the isDragging flag
+    rearrange();
     isDragging=false;
 }
 
+//Quando andar com um objeto além dos limites do quadro
 function handleMouseOut(e){
     // return if we're not dragging
     if(!isDragging){return;}
@@ -135,6 +227,7 @@ function handleMouseOut(e){
     isDragging=false;
 }
 
+//Quando o mouse de mover
 function handleMouseMove(e){
     // return if we're not dragging
     if(!isDragging){return;}
@@ -158,6 +251,7 @@ function handleMouseMove(e){
     startY=mouseY;
 }
 
+//Quando der dois clicks
 function handleMousedblclick(e) {
   // tell the browser we're handling this event
   e.preventDefault();
@@ -180,8 +274,7 @@ function handleMousedblclick(e) {
   }
 }
 
-// clear the canvas and
-// redraw all shapes in their current positions
+// Limpa a tela e desenha de novo
 function drawAll(){
     ctx.clearRect(0,0,cw,ch);
     var color = 'red';
