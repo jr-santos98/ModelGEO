@@ -22,3 +22,29 @@ body {
   margin: 16px 0px;
   cursor: pointer;
 }
+
+.footer {
+	text-align:center;
+	font-size: 10pt;
+	position:absolute;
+	bottom:10px;
+	background: Gainsboro;
+	width:99%;
+	height: 5%;
+}
+
+img {
+	vertical-align: -80%;
+}
+
+.informacoes {
+	position: absolute;
+	top: 70px;
+	left: 560px;
+	text-align:center;
+}
+
+p {
+	text-align:left;
+	font-size: 12pt;
+}
